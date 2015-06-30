@@ -87,21 +87,23 @@ class Request:
 		return d
 
 	def get_name(self, proxy_request):
-		return proxy_request.path
+		path = proxy_request.request.path
+		name = path[:30]
+		return name
 
 	def get_url(self, proxy_request):
-		if proxy_request.port == 443:
-			url = 'https://' + proxy_request.host + proxy_request.path
-		elif proxy_request.port == 80:
-			url = 'http://' + proxy_request.host + proxy_request.path
+		if proxy_request.request.port == 443:
+			url = 'https://' + proxy_request.request.host + proxy_request.request.path
+		elif proxy_request.request.port == 80:
+			url = 'http://' + proxy_request.request.host + proxy_request.request.path
 		else:
-			url = 'http://' + proxy_request.host + ":" + str(proxy_request.port) + proxy_request.path
+			url = 'http://' + proxy_request.request.host + ":" + str(proxy_request.request.port) + proxy_request.request.path
 
 		return url
 
 	def get_data_mode(self, proxy_request):
-		if "content-type" in proxy_request.headers:
-			content_type = proxy_request.headers["content-type"][0]
+		if "content-type" in proxy_request.request.headers:
+			content_type = proxy_request.request.headers["content-type"][0]
 			print content_type
 
 			if content_type.find("x-www-form-urlencoded") > 0:
@@ -132,18 +134,18 @@ class Request:
 	def init_from_proxy(self, proxy_request):
 		self.name = self.get_name(proxy_request)
 		self.url = self.get_url(proxy_request)
-		self.method = proxy_request.method
-		self.headersKvPairs = proxy_request.headers
-		self.headers = self.get_headers(proxy_request.headers)
+		self.method = proxy_request.request.method
+		self.headersKvPairs = proxy_request.request.headers
+		self.headers = self.get_headers(proxy_request.request.headers)
 
 		try:
 			if self.method_has_body(self.method):
 				self.dataMode = self.get_data_mode(proxy_request)
 				print "Data mode is %s" % (self.dataMode)
-				content = proxy_request.content
+				content = proxy_request.request.content
 
-				if "content-type" in proxy_request.headers:
-					h = proxy_request.headers["content-type"][0]
+				if "content-type" in proxy_request.request.headers:
+					h = proxy_request.request.headers["content-type"][0]
 
 					if self.dataMode == "urlencoded":
 						self.data = self.get_urlencoded_body(content, h, self.method)
