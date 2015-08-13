@@ -1,4 +1,4 @@
-from postman.collection import Collection
+from postman.Collection import Collection
 from postman.collection_creator_proxy import CollectionCreatorProxy
 from postman.header_filter_proxy import HeaderFilterProxy
 from libmproxy import controller, proxy
