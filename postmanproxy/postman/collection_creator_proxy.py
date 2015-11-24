@@ -48,7 +48,7 @@ class CollectionCreatorProxy(controller.Master):
 		restricted_headers = self.restricted_headers
 		headers = copy.deepcopy(request.headersKvPairs)
 
-		for k, v in headers:
+		for k, v in headers.iteritems():
 			key = k.lower()
 			if key in restricted_headers:
 				del headers[key]
@@ -59,7 +59,7 @@ class CollectionCreatorProxy(controller.Master):
 		try:
 			TCP_IP = self.tcp_host
 			TCP_PORT = self.tcp_port
-			BUFFER_SIZE = 1024 * 100
+			BUFFER_SIZE = 4092 * 100
 			MESSAGE = json.dumps(request.get_json())
 
 			print MESSAGE
@@ -72,7 +72,7 @@ class CollectionCreatorProxy(controller.Master):
 
 			print "received data:", data
 		except Exception as ex:
-			logging.exception("Something awful happened!")
+			logging.exception("send_to_postman: something awful happened!")
 
 
 	def get_methods(self, methodString):
@@ -81,7 +81,7 @@ class CollectionCreatorProxy(controller.Master):
 
 		m = methodString.split(',')
 		methods = []
-		for method in m:
+		for method in m.iteritems():
 			method = method.strip()
 			method = method.upper()
 			methods.append(method)
@@ -91,7 +91,7 @@ class CollectionCreatorProxy(controller.Master):
 	def get_status_codes(self, statusCodeString):
 		c = statusCodeString.split(',')
 		status_codes = []
-		for status_code in c:
+		for status_code in c.iteritems():
 			status_code = status_code.strip()
 
 			if status_code != "":
@@ -108,6 +108,7 @@ class CollectionCreatorProxy(controller.Master):
 	def handle_request(self, msg):
 		try:
 			request = Request(self.collection.id)
+			print request
 			request.init_from_proxy(msg)
 
 			print request.headers
@@ -138,7 +139,7 @@ class CollectionCreatorProxy(controller.Master):
 					self.send_to_postman(request)
 					print "Sent to Postman"
 		except Exception as ex:
-			logging.exception("Something awful happened!")
+			logging.exception("handle_request: Something awful happened!")
 
 		msg.reply()
 

@@ -126,7 +126,7 @@ class Request:
 
 	def get_headers(self, headers):
 		head_string = ""
-		for k, v in headers:
+		for k, v in headers.iteritems():
 			head_string += k + ": " + v + "\n"
 
 		return head_string
@@ -158,4 +158,4 @@ class Request:
 			else:
 				pass
 		except Exception as ex:
-			logging.exception("Something awful happened!")
+			logging.exception("init_from_proxy: Something awful happened!")
