@@ -53,6 +53,7 @@ class CollectionCreatorProxy(controller.Master):
 			if key in restricted_headers:
 				del headers[key]
 
+		print "remove_restricted_headers:", headers
 		request.headers = request.get_headers(headers)
 
 	def send_to_postman(self, request):
@@ -81,7 +82,7 @@ class CollectionCreatorProxy(controller.Master):
 
 		m = methodString.split(',')
 		methods = []
-		for method in m.iteritems():
+		for method in m:
 			method = method.strip()
 			method = method.upper()
 			methods.append(method)
@@ -91,7 +92,7 @@ class CollectionCreatorProxy(controller.Master):
 	def get_status_codes(self, statusCodeString):
 		c = statusCodeString.split(',')
 		status_codes = []
-		for status_code in c.iteritems():
+		for status_code in c:
 			status_code = status_code.strip()
 
 			if status_code != "":

@@ -34,7 +34,7 @@ class Collection:
 
 	def get_requests(self):
 		r = []
-		for request in self.requests:
+		for request in self.requests.iteritems():
 			r.append(request.get_json())
 
 		return r
